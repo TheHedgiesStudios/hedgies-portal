@@ -1,0 +1,387 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Lock scroll + base background (seen only behind the nebula layer) */
+body {
+  @apply overflow-hidden;
+  background: linear-gradient(180deg, #051428, #000a14);
+  color: white;
+}
+
+/* ============================================
+   BASE COMET STYLE  (used on login page)
+============================================ */
+.comet {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  opacity: 0.85;
+  filter: blur(2px);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.comet-blue {
+  background: rgba(0, 153, 255, 0.9);
+}
+
+.comet-lightblue {
+  background: rgba(0, 204, 255, 0.9);
+}
+
+.comet-red {
+  background: rgba(255, 60, 60, 0.9);
+}
+
+.comet-orange {
+  background: rgba(255, 140, 40, 0.9);
+}
+
+/* ============================================
+   SPARK TRAILS  (used on login page)
+============================================ */
+.comet-sparks {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  opacity: 0.6;
+  filter: blur(2px);
+  pointer-events: none;
+  z-index: 4;
+}
+
+.comet-sparks-blue {
+  background: rgba(0, 153, 255, 0.7);
+}
+
+.comet-sparks-lightblue {
+  background: rgba(0, 204, 255, 0.7);
+}
+
+.comet-sparks-red {
+  background: rgba(255, 60, 60, 0.75);
+}
+
+.comet-sparks-orange {
+  background: rgba(255, 140, 40, 0.75);
+}
+
+/* ============================================
+   COMET FLIGHT PATH
+============================================ */
+@keyframes cometFly {
+  from {
+    transform: translate(-20vw, -20vh);
+  }
+  to {
+    transform: translate(120vw, 120vh);
+  }
+}
+
+.comet,
+.comet-sparks {
+  animation-name: cometFly;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* ============================================================
+   DESKTOP BACKGROUND – NEBULA (galaxy-space.gif)
+============================================================ */
+.dashboard-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: url('/galaxy-space.png') center/cover no-repeat;
+  z-index: 0;
+  animation: nebulaFloat 42s ease-in-out infinite alternate;
+  opacity: 0;                 /* hidden during boot */
+  transition: opacity 1.5s ease;
+}
+
+@keyframes nebulaFloat {
+  0%   { transform: scale(1) translateY(0); }
+  50%  { transform: scale(1.05) translateY(-10px); }
+  100% { transform: scale(1) translateY(0); }
+}
+
+/* Fade-in class the React code adds once boot is done */
+.dashboard-visible {
+  opacity: 1 !important;
+}
+
+/* ============================================================
+   BOOT SCREEN – LOGO + LOADING BAR
+============================================================ */
+.boot-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity 1.2s ease;
+}
+
+.boot-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* BIG boot logo */
+.boot-logo {
+  width: 320px;   /* larger, not squished */
+  height: auto;
+  opacity: 0;
+  transform: scale(0.85);
+  animation: bootLogoPop 1.1s ease forwards;
+}
+
+@keyframes bootLogoPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.65);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Boot loading bar */
+.boot-load-bar {
+  width: 220px;
+  height: 6px;
+  margin-top: 26px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+  border-radius: 9999px;
+  position: relative;
+}
+
+.boot-load-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  transform: translateX(-100%);
+  animation: bootBarMove 2.6s ease-out forwards;
+}
+
+@keyframes bootBarMove {
+  0%   { transform: translateX(-100%); }
+  60%  { transform: translateX(15%); }
+  100% { transform: translateX(0); }
+}
+
+/* --- FUTURISTIC SHORT MOUSE TRAIL --- */
+.trail-dot {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  pointer-events: none;
+  border-radius: 50%;
+  background: rgba(120, 200, 255, 0.8);
+  box-shadow: 0 0 8px rgba(120, 200, 255, 0.7);
+  transform: translate(-50%, -50%);
+  opacity: 1;
+  animation: fadeOut 0.15s linear forwards;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+}
+
+/* ============================================================
+   DESKTOP ICONS – GLOW & HOVER EFFECT
+============================================================ */
+.desktop-icon {
+  transition: transform 0.2s ease, filter 0.4s ease;
+  filter: drop-shadow(0 0 6px rgba(255, 180, 80, 0.28));
+}
+
+.desktop-icon:hover {
+  transform: scale(1.07);
+  filter: drop-shadow(0 0 12px rgba(255, 140, 20, 0.65));
+}
+
+/* ============================================================
+   DESKTOP WINDOWS (DRAGGABLE / RESIZABLE)
+============================================================ */
+.window-frame {
+  position: absolute;
+  background: rgba(10, 10, 10, 0.55);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  resize: both;
+  overflow: hidden;
+  box-shadow:
+    0 0 12px rgba(0, 0, 0, 0.45),
+    0 0 22px rgba(0, 0, 0, 0.25);
+}
+
+.window-titlebar {
+  height: 38px;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  color: white;
+  cursor: grab;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.window-titlebar:active {
+  cursor: grabbing;
+}
+
+.window-close-btn {
+  margin-left: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  background: #ff4d4d;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.window-close-btn:hover {
+  background: #ff2d2d;
+}
+
+/* ============================================================
+   TASKBAR STYLE (Windows-like)
+============================================================ */
+.taskbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 48px;
+  width: 100%;
+  background: rgba(10, 10, 10, 0.55);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  z-index: 500;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Taskbar search bar */
+.taskbar-search {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 6px 12px;
+  color: white;
+  width: 260px;
+  margin-right: 14px;
+  font-size: 13px;
+  outline: none;
+  border: none;
+  transition: background 0.2s ease;
+}
+
+.taskbar-search::placeholder {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.taskbar-search:focus {
+  background: rgba(255, 255, 255, 0.18);
+}
+@keyframes popup {
+  0% { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.animate-popup {
+  animation: popup 0.22s ease-out forwards;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease-out forwards;
+}
+@keyframes splashLogo {
+  0% {
+    transform: scale(0.8);
+    filter: blur(8px) brightness(0.5);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.03);
+    filter: blur(0px) brightness(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    filter: blur(0px) brightness(1);
+    opacity: 1;
+  }
+}
+
+@keyframes splashText {
+  0% {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0.85;
+  }
+}
+/* ----------------------------------------------------
+   DESKTOP ICON SNAP GRID (Windows-style alignment)
+---------------------------------------------------- */
+.desktop-grid {
+  position: relative;
+  padding-top: 20px;
+  padding-bottom: 80px; /* prevents icons from touching taskbar */
+}
+
+.desktop-icon {
+  width: 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  user-select: none;
+  cursor: default;
+}
+
+/* Forces icons to always align to the virtual grid */
+.desktop-grid {
+  grid-auto-rows: 110px;
+}
+
+.desktop-icon > div {
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.desktop-icon:hover > div {
+  transform: scale(1.07);
+  opacity: 0.95;
+}
+/* Reserve space above the taskbar AND above the announcement widget */
+.desktop-grid {
+  padding-bottom: 140px !important; 
+}
